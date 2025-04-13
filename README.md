@@ -1,6 +1,16 @@
 # 🐾 Oxford-IIIT Pet Image Segmentation (UNet, PyTorch)
 
 This project prepares the Oxford-IIIT Pet Dataset and trains a UNet-based segmentation model to segment pet regions from images. It includes full preprocessing, model training, evaluation, and metric logging using PyTorch and Weights & Biases (WandB).
+## Processed Data
+
+- Dataset: Oxford-IIIT Pet Dataset
+- Total Images: 3,686
+- Each image has a corresponding processed mask with 3 classes:
+  - 0 = Background
+  - 1 = Pet
+  - 2 = Border
+
+This satisfies the assignment’s requirement to process 3,000 to 8,000 images.
 
 ---
 ## 📂 Project Structure
