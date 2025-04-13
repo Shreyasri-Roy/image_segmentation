@@ -5,9 +5,22 @@ This project prepares the Oxford-IIIT Pet Dataset and trains a UNet-based segmen
 ---
 
 ## 📂 Project Structure
- ├── dataset/ │ ├── train/images/ │ ├── train/masks/ │ ├── val/images/ │ ├── val/masks/ │ ├── test/images/ │ └── test/masks/ ├── scripts/ │ └── prepare_dataset.py ├── training/ │ └── train_unet.py (or .ipynb) ├── report.md ├── requirements.txt └── README.md
-
----
+ 📦 project-root/
+├── dataset/
+│   ├── annotations
+│   │   ├── trimaps
+│   │   └── ....
+│   ├── images
+│   │   ├── Abyssinian_1.jpg
+│   │   └── ....
+│   ├── masks
+│   │   ├── Abyssinian_1.png
+│   │   └── ...
+├── prepare_dataset.py
+├── train_unet.py (or .ipynb)
+├── report.md
+├── requirements.txt
+└── README.md
 
 ## ⚙️ Task 1: Dataset Preparation
 
