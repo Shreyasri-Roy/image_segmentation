@@ -1,0 +1,24 @@
+# requirements.txt
+# ✅ How to reproduce this project on Linux:
+# 1. Clone the repository:
+#    git clone https://github.com/yourusername/image-segmentation-assignment.git
+#    cd image-segmentation-assignment
+# 2. Create and activate a virtual environment (optional but recommended):
+#    python3 -m venv venv
+#    source venv/bin/activate
+# 3. Install dependencies:
+#    pip install -r requirements.txt
+# 4. Prepare the dataset:
+#    python scripts/prepare_dataset.py
+# 5. Train the model:
+#    python training/train_unet.py
+# All logs and visualizations will be available at https://wandb.ai after login.
+
+torch>=2.0.0
+torchvision>=0.15.0
+matplotlib>=3.7.0
+numpy>=1.24.0
+Pillow>=9.4.0
+scikit-learn>=1.2.0
+wandb>=0.15.0
+requests>=2.28.0
