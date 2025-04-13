@@ -210,7 +210,7 @@ wandb.init(
     project="oxford-pet-segmentation",
     name="unet-128x128-split",
     config={
-        "epochs": 2,
+        "epochs": 50,
         "batch_size": 8,
         "image_size": "128x128",
         "architecture": "UNet",
