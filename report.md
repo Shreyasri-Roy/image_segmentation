@@ -90,10 +90,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 4. Prepare dataset
-python scripts/prepare_dataset.py
+python prepare_dataset.py
 
 # 5. Train model
-python training/train_unet.py
+python train_unet.py
 ```
 
 All logs and predictions are automatically tracked at [wandb.ai](https://wandb.ai).
