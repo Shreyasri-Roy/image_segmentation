@@ -38,6 +38,21 @@ Run:
 ```bash
 python prepare_dataset.py
 ```
+Prepares dataset folder of the form:
+## 📂 Dataset Folder Structure
+
+    📦 project-root/
+    ├── dataset/
+    │   ├── annotations
+    │   │   ├── trimaps
+    │   │   └── ....
+    │   ├── images
+    │   │   ├── Abyssinian_1.jpg
+    │   │   └── ....
+    │   ├── masks
+    │   │   ├── Abyssinian_1.png
+    │   │   └── ...
+
 ---
 
 ### ⚠️ Edge Case Handling
