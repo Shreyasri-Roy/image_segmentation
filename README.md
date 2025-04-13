@@ -3,24 +3,25 @@
 This project prepares the Oxford-IIIT Pet Dataset and trains a UNet-based segmentation model to segment pet regions from images. It includes full preprocessing, model training, evaluation, and metric logging using PyTorch and Weights & Biases (WandB).
 
 ---
-
 ## 📂 Project Structure
- 📦 project-root/
-├── dataset/
-│   ├── annotations
-│   │   ├── trimaps
-│   │   └── ....
-│   ├── images
-│   │   ├── Abyssinian_1.jpg
-│   │   └── ....
-│   ├── masks
-│   │   ├── Abyssinian_1.png
-│   │   └── ...
-├── prepare_dataset.py
-├── train_unet.py (or .ipynb)
-├── report.md
-├── requirements.txt
-└── README.md
+
+    📦 project-root/
+    ├── dataset/
+    │   ├── annotations
+    │   │   ├── trimaps
+    │   │   └── ....
+    │   ├── images
+    │   │   ├── Abyssinian_1.jpg
+    │   │   └── ....
+    │   ├── masks
+    │   │   ├── Abyssinian_1.png
+    │   │   └── ...
+    ├── prepare_dataset.py
+    ├── train_unet.py (or .ipynb)
+    ├── report.md
+    ├── requirements.txt
+    └── README.md
+
 
 ## ⚙️ Task 1: Dataset Preparation
 
@@ -35,7 +36,7 @@ This project prepares the Oxford-IIIT Pet Dataset and trains a UNet-based segmen
 
 Run:
 ```bash
-python scripts/prepare_dataset.py
+python prepare_dataset.py
 ```
 ---
 
@@ -63,7 +64,7 @@ Trains a **UNet** segmentation model using PyTorch. Logs training progress and p
 ### ✅ Run
 
 ```bash
-python training/train_unet.py
+python train_unet.py
 ```
 
 ---
