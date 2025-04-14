@@ -4,10 +4,11 @@
 ## 1. 🔍 Inference Demonstration
 We demonstrate the trained UNet model on unseen validation data. The model produces high-quality segmentation masks distinguishing pet foregrounds from the background and border regions.
 
+
 ### Sample Output:
-| Input Image | Ground Truth Mask | Predicted Mask |
-|-------------|--------------------|----------------|
-| ![](input.png) | ![](true_mask.png) | ![](predicted_mask.png) |
+| Testing Outputs | 
+|-------------|
+| ![](image.png) 
 
 - **Black (0)** = Background
 - **Red (1)** = Pet
