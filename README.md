@@ -13,6 +13,8 @@ This project prepares the Oxford-IIIT Pet Dataset and trains a UNet-based segmen
 This satisfies the assignment’s requirement to process 3,000 to 8,000 images.
 
 ---
+### FULL CODE PIPELINE IS THERE IN `full_code_pipeline.pynb`: YOU CAN JUST RUN IT IN COLAB/ JUPYTER NOTEBOOK AND DO NOTHING ELSE.
+### Otherwise follow below instructions:
 ## 📂 Project Structure
 
     📦 project-root/
