@@ -23,10 +23,10 @@ import matplotlib.pyplot as plt
 import os
 import torch.nn as nn
 
-ROOT_DIR = Path("dataset")
-IMAGE_DIR = ROOT_DIR / "images"
-MASKS_DIR = ROOT_DIR / "masks"
-# Creating Dataset Class
+"""##**Utility Functions**"""
+
+
+#Dataset Class
 class Pet_Dataset(Dataset):
   def __init__(self, image_dir, mask_dir, size=(128,128)):
       self.image_dir = image_dir
@@ -55,54 +55,8 @@ class Pet_Dataset(Dataset):
       mask = self.mask_transforms(mask)
 
       return image,mask
-
-dataset = Pet_Dataset(IMAGE_DIR, MASKS_DIR)
-
-import torch
-from torch.utils.data import random_split
-
-# Creating Train, Validation, and Test Datasets and DataLoader
-
-# Define the split ratios
-train_ratio = 0.7
-val_ratio = 0.15
-test_ratio = 0.15
-
-# Calculate the sizes of each split
-dataset_size = len(dataset)
-train_size = int(train_ratio * dataset_size)
-val_size = int(val_ratio * dataset_size)
-test_size = dataset_size - train_size - val_size
-
-# Split the dataset
-train_dataset, val_dataset, test_dataset = random_split(
-    dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42)
-)
-
-# Print the sizes of each split
-print(f"Train dataset size: {len(train_dataset)}")
-print(f"Validation dataset size: {len(val_dataset)}")
-print(f"Test dataset size: {len(test_dataset)}")
-
-train_loader = DataLoader(
-    dataset=train_dataset,
-    batch_size=8,
-    shuffle=True
-)
-
-val_loader = DataLoader(
-    dataset=val_dataset,
-    batch_size=8,
-    shuffle=False
-)
-
-test_loader = DataLoader(
-    dataset=test_dataset,
-    batch_size=8,
-    shuffle=True
-)
-
-# Defining the Model: UNet
+    
+# Defining the Model
 class UNet(nn.Module):
   def __init__(self,n_classes):
     super(UNet,self).__init__()
@@ -133,17 +87,9 @@ class UNet(nn.Module):
     d1 = self.dec1(d1)
     # print(f"Shape passing decoder layer:{d1.shape}")
     return self.final(d1)
-# Setting up the device
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print(device)
 
-model = UNet(n_classes=3).to(device)
+#Metrics
 
-optimizer = torch.optim.Adam(model.parameters(),
-                             lr=0.01)
-loss_fn = nn.CrossEntropyLoss()
-
-# Metrics to be computed
 def compute_iou(pred, target, n_classes=3):
   ious = []
   pred = pred.view(-1)
@@ -164,7 +110,6 @@ def pixel_accuracy(pred, target):
   correct = (pred == target).sum().item()
   total = target.numel()
   return correct/total
-
 def dice_score(pred, target, n_classes=3):
   dice = []
 
@@ -179,7 +124,9 @@ def dice_score(pred, target, n_classes=3):
       dice.append((2. * intersection)/union)
 
   return dice
-# Function to evaluate the trained model
+  
+# Function for evaluating model on a given dataset
+
 def evaluate_model(model, dataloader, device):
     model.eval()
     all_preds, all_targets = [], []
@@ -202,116 +149,180 @@ def evaluate_model(model, dataloader, device):
 
     return ious, dices, acc, preds_all, targets_all
 
-!pip install wandb
+"""##**Task 2**"""
+def main1():
+  ROOT_DIR = Path("dataset")
+  IMAGE_DIR = ROOT_DIR / "images"
+  MASKS_DIR = ROOT_DIR / "masks"
 
-import wandb
-wandb.login()
-wandb.init(
-    project="oxford-pet-segmentation",
-    name="unet-128x128-split",
-    config={
-        "epochs": 50,
-        "batch_size": 8,
-        "image_size": "128x128",
-        "architecture": "UNet",
-        "loss": "CrossEntropy",
-        "optimizer": "Adam",
-        "learning_rate": 1e-3,
-        "num_classes": 3,
-    }
-)
+  dataset = Pet_Dataset(IMAGE_DIR, MASKS_DIR)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = UNet(n_classes=3).to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-criterion = torch.nn.CrossEntropyLoss()
+  import torch
+  from torch.utils.data import random_split
 
-for epoch in range(wandb.config.epochs):
-    model.train()
-    train_loss = 0.0
+  # Assuming 'dataset' is already defined as Pet_Dataset(IMAGE_DIR, MASKS_DIR)
 
-    for images, masks in train_loader:
-        images, masks = images.to(device), masks.to(device)
+  # Define the split ratios
+  train_ratio = 0.7
+  val_ratio = 0.15
+  test_ratio = 0.15
 
-        preds = model(images)
-        loss = criterion(preds, masks)
+  # Calculate the sizes of each split
+  dataset_size = len(dataset)
+  train_size = int(train_ratio * dataset_size)
+  val_size = int(val_ratio * dataset_size)
+  test_size = dataset_size - train_size - val_size
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+  # Split the dataset
+  train_dataset, val_dataset, test_dataset = random_split(
+      dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42)
+  )
 
-        train_loss += loss.item()
-    train_loss/=len(train_loader)
+  # Print the sizes of each split
+  print(f"Train dataset size: {len(train_dataset)}")
+  print(f"Validation dataset size: {len(val_dataset)}")
+  print(f"Test dataset size: {len(test_dataset)}")
 
-    print(f"Epoch {epoch+1}, Train Loss: {train_loss:.4f}")
+  train_loader = DataLoader(
+      dataset=train_dataset,
+      batch_size=8,
+      shuffle=True
+  )
 
-    # 🎯 Validation Step
-    ious, dices, acc, val_preds, val_targets = evaluate_model(model, val_loader, device)
+  val_loader = DataLoader(
+      dataset=val_dataset,
+      batch_size=8,
+      shuffle=False
+  )
 
-    print(f"Val Pixel Accuracy: {acc:.4f}")
-    print(f"Val IoU: {ious}")
-    print(f"Val Dice: {dices}")
+  test_loader = DataLoader(
+      dataset=test_dataset,
+      batch_size=8,
+      shuffle=True
+  )
 
-    # 🟩 WandB Logging
-    wandb.log({
-        "epoch": epoch + 1,
-        "train_loss": train_loss,
-        "val_pixel_accuracy": acc,
-        "val_iou_class_0": ious[0],
-        "val_iou_class_1": ious[1],
-        "val_iou_class_2": ious[2],
-        "val_dice_class_0": dices[0],
-        "val_dice_class_1": dices[1],
-        "val_dice_class_2": dices[2],
-    })
+  device = "cuda" if torch.cuda.is_available() else "cpu"
+  device
 
-    # 🖼️ Log one sample from validation
-    def mask_to_rgb(mask_tensor):
-        mask = mask_tensor.numpy()
-        colors = np.array([[0, 0, 0], [255, 0, 0], [0, 255, 0]])
-        return colors[mask]
+  model = UNet(n_classes=3).to(device)
 
-    val_sample_image, val_sample_mask = next(iter(val_loader))
-    val_sample_image = val_sample_image[0].to(device).unsqueeze(0)
-    val_pred = torch.argmax(model(val_sample_image), dim=1).squeeze().cpu()
-    val_image = val_sample_image.squeeze().permute(1, 2, 0).cpu().numpy()
-    val_true = val_sample_mask[0]
+  optimizer = torch.optim.Adam(model.parameters(),
+                              lr=0.01)
+  loss_fn = nn.CrossEntropyLoss()
 
-    wandb.log({
-        "Val/Input": wandb.Image(val_image, caption="Input"),
-        "Val/Prediction": wandb.Image(mask_to_rgb(val_pred), caption="Prediction"),
-        "Val/True Mask": wandb.Image(mask_to_rgb(val_true), caption="Ground Truth")
-    })
 
-print("🔍 Running final evaluation on test set...")
-test_ious, test_dices, test_acc, _, _ = evaluate_model(model, test_loader, device)
 
-print(f"Test Accuracy: {test_acc:.4f}")
-print(f"Test IoU: {test_ious}")
-print(f"Test Dice: {test_dices}")
+  !pip install wandb
 
-wandb.log({
-    "test_pixel_accuracy": test_acc,
-    "test_iou_class_0": test_ious[0],
-    "test_iou_class_1": test_ious[1],
-    "test_iou_class_2": test_ious[2],
-    "test_dice_class_0": test_dices[0],
-    "test_dice_class_1": test_dices[1],
-    "test_dice_class_2": test_dices[2],
-})
+  import wandb
+  wandb.login()
+  wandb.init(
+      project="oxford-pet-segmentation",
+      name="unet-128x128-split",
+      config={
+          "epochs": 15,
+          "batch_size": 8,
+          "image_size": "128x128",
+          "architecture": "UNet",
+          "loss": "CrossEntropy",
+          "optimizer": "Adam",
+          "learning_rate": 1e-3,
+          "num_classes": 3,
+      }
+  )
+  for epoch in range(wandb.config.epochs):
+      model.train()
+      train_loss = 0.0
 
-#7. Predictions that demonstrates model inference with example predictions
-model.eval()
-with torch.inference_mode():
-  sample_img, sample_mask = dataset[0]
-  pred1 = model(sample_img.unsqueeze(0).to(device))
-  pred = torch.argmax(pred1.squeeze(0),dim=0).cpu().numpy()
-plt.subplot(1,3,1)
-plt.imshow(sample_img.permute(1,2,0))
-plt.title("Original Image")
-plt.subplot(1,3,2)
-plt.imshow(sample_mask)
-plt.title("Original Mask")
-plt.subplot(1,3,3)
-plt.imshow(pred)
-plt.title("Predicted Mask")
+      for images, masks in train_loader:
+          images, masks = images.to(device), masks.to(device)
+
+          preds = model(images)
+          loss = loss_fn(preds, masks)
+
+          optimizer.zero_grad()
+          loss.backward()
+          optimizer.step()
+
+          train_loss += loss.item()
+      train_loss/=len(train_loader)
+
+      print(f"Epoch {epoch+1}, Train Loss: {train_loss:.4f}")
+
+      # 🎯 Validation Step
+      ious, dices, acc, val_preds, val_targets = evaluate_model(model, val_loader, device)
+
+      print(f"Val Pixel Accuracy: {acc:.4f}")
+      print(f"Val IoU: {ious}")
+      print(f"Val Dice: {dices}")
+
+      # 🟩 WandB Logging
+      wandb.log({
+          "epoch": epoch + 1,
+          "train_loss": train_loss,
+          "val_pixel_accuracy": acc,
+          "val_iou_class_0": ious[0],
+          "val_iou_class_1": ious[1],
+          "val_iou_class_2": ious[2],
+          "val_dice_class_0": dices[0],
+          "val_dice_class_1": dices[1],
+          "val_dice_class_2": dices[2],
+      })
+
+
+      # 🖼️ Log one sample from validation
+      def mask_to_rgb(mask_tensor):
+          mask = mask_tensor.numpy()
+          colors = np.array([[0, 0, 0], [255, 0, 0], [0, 255, 0]])
+          return colors[mask]
+
+
+      val_sample_image, val_sample_mask = next(iter(val_loader))
+      val_sample_image = val_sample_image[0].to(device).unsqueeze(0)
+      val_pred = torch.argmax(model(val_sample_image), dim=1).squeeze().cpu()
+      val_image = val_sample_image.squeeze().permute(1, 2, 0).cpu().numpy()
+      val_true = val_sample_mask[0]
+
+      wandb.log({
+          "Val/Input": wandb.Image(val_image, caption="Input"),
+          "Val/Prediction": wandb.Image(mask_to_rgb(val_pred), caption="Prediction"),
+          "Val/True Mask": wandb.Image(mask_to_rgb(val_true), caption="Ground Truth")
+      })
+
+  print("🔍 Running final evaluation on test set...")
+  test_ious, test_dices, test_acc, _, _ = evaluate_model(model, test_loader, device)
+
+  print(f"Test Accuracy: {test_acc:.4f}")
+  print(f"Test IoU: {test_ious}")
+  print(f"Test Dice: {test_dices}")
+
+  wandb.log({
+      "test_pixel_accuracy": test_acc,
+      "test_iou_class_0": test_ious[0],
+      "test_iou_class_1": test_ious[1],
+      "test_iou_class_2": test_ious[2],
+      "test_dice_class_0": test_dices[0],
+      "test_dice_class_1": test_dices[1],
+      "test_dice_class_2": test_dices[2],
+  })
+
+  #7. Predictions
+  model.eval()
+  with torch.inference_mode():
+    sample_img, sample_mask = dataset[0]
+    pred1 = model(sample_img.unsqueeze(0).to(device))
+    pred = torch.argmax(pred1.squeeze(0),dim=0).cpu().numpy()
+  plt.subplot(1,3,1)
+  plt.imshow(sample_img.permute(1,2,0))
+  plt.title("Original Image")
+  plt.subplot(1,3,2)
+  plt.imshow(sample_mask)
+  plt.title("Original Mask")
+  plt.subplot(1,3,3)
+  plt.imshow(pred)
+  plt.title("Predicted Mask")
+
+if __name__ == "__main__":
+  main1()
+
+
