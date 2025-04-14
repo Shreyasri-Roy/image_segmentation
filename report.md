@@ -7,7 +7,7 @@ We demonstrate the trained UNet model on unseen validation data. The model produ
 ### Sample Output:
 | Input Image | Ground Truth Mask | Predicted Mask |
 |-------------|--------------------|----------------|
-| ![](samples/input.png) | ![](samples/true_mask.png) | ![](samples/predicted_mask.png) |
+| ![](input.png) | ![](true_mask.png) | ![](predicted_mask.png) |
 
 - **Black (0)** = Background
 - **Red (1)** = Pet
@@ -65,9 +65,9 @@ The predictions align well with ground truth boundaries, particularly on pet cla
 
 | Metric       | Class 0 (Background) | Class 1 (Pet) | Class 2 (Border) |
 |--------------|----------------------|---------------|------------------|
-| IoU          | 0.87                 | 0.78          | 0.42             |
-| Dice Score   | 0.92                 | 0.83          | 0.50             |
-| Pixel Acc.   |                      | **0.89**      |                  |
+| IoU          | 0.5959808616013222   | 0.758847404460| 0.31080072909003 |
+| Dice Score   | 0.7469               | 0.8629        | 0.4742           |
+| Pixel Acc.   |                      | **0.7895**    |                  |
 
 **Notes:**
 - Border class performance is lower due to thin structure and pixel imbalance.
