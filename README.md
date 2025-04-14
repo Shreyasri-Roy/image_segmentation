@@ -114,6 +114,7 @@ To install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+ run.sh  -> Includes instructions to reproduce the results on a Linux environment.
 ---
 ### 🙌 Acknowledgements 
 * **Dataset:** Oxford-IIIT Pet Dataset
