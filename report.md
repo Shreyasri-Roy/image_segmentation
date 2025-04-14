@@ -10,6 +10,10 @@ We demonstrate the trained UNet model on unseen validation data. The model produ
 |-------------|
 | ![](image.png) 
 
+### Sample Output:
+| Input Image | Ground Truth Mask | Predicted Mask |
+|-------------|--------------------|----------------|
+| ![](samples/original_image.png) | ![](samples/original_mask.png) | ![](samples/predicted_mask.png) |
 - **Black (0)** = Background
 - **Red (1)** = Pet
 - **Green (2)** = Border
@@ -98,3 +102,5 @@ python train_unet.py
 ```
 
 All logs and predictions are automatically tracked at [wandb.ai](https://wandb.ai).
+
+
