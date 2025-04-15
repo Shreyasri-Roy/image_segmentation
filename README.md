@@ -32,6 +32,9 @@ This satisfies the assignment’s requirement to process 3,000 to 8,000 images.
     ├── train_unet.py (or .ipynb)
     ├── report.md
     ├── requirements.txt
+    ├── run.sh
+    ├── wanb report.csv
+    ├── full_code_pipeline.pynb
     └── README.md
 
 
@@ -121,5 +124,6 @@ pip install -r requirements.txt
 ### 🙌 Acknowledgements 
 * **Dataset:** Oxford-IIIT Pet Dataset
 * * **Model Architecture:** UNet
-* * **Experiment Logging:** [Weights & Biases](https://wandb.ai)
+* *  **Experiment Logging:** Weights & Biases Report is present in **`wandb report.csv`**
+* * **Experiment Logging:** [Weights & Biases]([https://wandb.ai](https://wandb.ai/shreyasriroy-indian-institute-of-science/oxford-pet-segmentation/runs/imp7h51g?nw=nwusershreyasriroysrmr))
 ---
